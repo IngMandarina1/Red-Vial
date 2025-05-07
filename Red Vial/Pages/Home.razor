@@ -1,7 +1,85 @@
 ﻿@page "/"
+@using Red_Vial.Server
+@inject NavigationManager Navigation
 
-<PageTitle>Home</PageTitle>
+<h3>Mapa de Carreteras</h3>
 
-<h1>Hello, world!</h1>
+<div class="map-container">
+    @for (int i = 0; i < mapa.Filas; i++)
+    {
+        <div class="map-row">
+            @for (int j = 0; j < mapa.Columnas; j++)
+            {
+                var nodo = mapa.Grid[i, j];
+                <div class="map-cell @GetCellClass(nodo)" @onclick="() => OnCellClick(nodo)"></div>
+            }
+        </div>
+    }
+</div>
 
-Welcome to your new app.
+<button class="btn btn-primary" @onclick="GenerarNuevoMapa">Nuevo Mapa</button>
+<button class="btn btn-success" @onclick="EncontrarCamino">Buscar Camino</button>
+
+@code {
+    private MapaCarreteras mapa = new(10, 10);
+    private NodoMapa? inicio;
+    private NodoMapa? fin;
+
+    private string GetCellClass(NodoMapa nodo)
+    {
+        if (!nodo.EsCalle) return "obstacle";
+        if (nodo.EsInicio) return "start";
+        if (nodo.EsFin) return "end";
+        if (nodo.EnCamino) return "path";
+        return "street";
+    }
+
+    private void OnCellClick(NodoMapa nodo)
+    {
+        if (!nodo.EsCalle) return;
+
+        if (inicio == null)
+        {
+            inicio = nodo;
+            nodo.EsInicio = true;
+        }
+        else if (fin == null)
+        {
+            fin = nodo;
+            nodo.EsFin = true;
+        }
+        else
+        {
+            inicio.EsInicio = false;
+            fin.EsFin = false;
+            inicio = nodo;
+            nodo.EsInicio = true;
+            fin = null;
+        }
+    }
+
+    private void GenerarNuevoMapa()
+    {
+        mapa = new MapaCarreteras(10, 10);
+        mapa.GenerarObstaculos(20);
+        inicio = null;
+        fin = null;
+    }
+
+    private void EncontrarCamino()
+    {
+        if (inicio == null || fin == null) return;
+
+        var camino = BFS(inicio, fin);
+        foreach (var nodo in camino)
+        {
+            nodo.EnCamino = true;
+        }
+    }
+
+    private List<NodoMapa> BFS(NodoMapa start, NodoMapa end)
+    {
+        // Implementar BFS aquí (similar a la versión de consola)
+        return new List<NodoMapa>();
+    }
+}

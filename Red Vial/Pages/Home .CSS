@@ -1,0 +1,37 @@
+﻿.map-container {
+	margin: 20px;
+}
+
+.map-row {
+	display: flex;
+}
+
+.map-cell {
+	width: 30px;
+	height: 30px;
+	border: 1px solid #ccc;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+}
+
+.street {
+	background-color: #e9ecef;
+}
+
+.obstacle {
+	background-color: #343a40;
+}
+
+.start {
+	background-color: #28a745 !important;
+}
+
+.end {
+	background-color: #dc3545 !important;
+}
+
+.path {
+	background-color: #ffd700 !important;
+}

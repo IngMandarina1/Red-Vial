@@ -1,35 +1,30 @@
 ﻿namespace Red_Vial.Server
 {
-	public class Nodo
+	public enum TipoVia { Autopista, Avenida, Calle, Peatonal }
+	public enum EstadoSemaforo { Verde, Amarillo, Rojo, NoAplica }
+
+	public class NodoRedVial
 	{
-		public string Informacion { get; set; }
-		public Nodo?  Norte { get; set; }
-		public Nodo?  Este { get; set; }
-		public Nodo?  Oeste { get; set; }
-		public Nodo?  Sur { get; set; }
+		public int X { get; }
+		public int Y { get; }
+		public int VehiculosEnEspera { get; set; }
+		public Dictionary<Direccion, TipoVia> TipoPorDireccion { get; } = new();
+		public EstadoSemaforo Semaforo { get; set; }
+		public double TiempoPromedioTransito { get; set; }
 
-		public Nodo()
+		// Conexiones
+		public NodoRedVial? Norte { get; set; }
+		public NodoRedVial? Sur { get; set; }
+		public NodoRedVial? Este { get; set; }
+		public NodoRedVial? Oeste { get; set; }
+
+		public NodoRedVial(int x, int y)
 		{
-			Informacion = string.Empty;
-			Norte = null;
-			Este  = null;
-			Oeste = null;
-			Sur   = null;
+			X = x;
+			Y = y;
+			Semaforo = EstadoSemaforo.NoAplica;
 		}
-
-		public Nodo(string informacion)
-		{
-			Informacion = informacion;
-			Norte = null;
-			Este  = null;
-			Oeste = null;
-			Sur   = null;
-		}
-
-		public override string ToString()
-		{
-			return $"{Informacion}";
-		}
-
 	}
+
+	public enum Direccion { Norte, Sur, Este, Oeste }
 }
