@@ -2,39 +2,56 @@
 
 namespace Red_Vial.Server
 {
-	public partial class TrafficNetworkGridBase : ComponentBase
+	public class LED
 	{
-		protected MapaVial Mapa { get; private set; } = new();
+         NodoRedVial?[,] matriz = new NodoRedVial[10, 10];
 
-		protected string GetCellClasses(NodoRedVial nodo)
-		{
-			var classes = new List<string>();
-			if (nodo.Semaforo != EstadoSemaforo.NoAplica) classes.Add("has-semaphore");
-			return string.Join(" ", classes);
-		}
+        public LED()
+        {
+            InicializarRedVial();
+        }
 
-		protected string GetDirectionSymbol(Direccion dir)
-		{
-			return dir switch
-			{
-				Direccion.Norte => "↑",
-				Direccion.Sur => "↓",
-				Direccion.Este => "→",
-				Direccion.Oeste => "←",
-				_ => ""
-			};
-		}
+        private void InicializarRedVial()
+        {
+            // Crear intersecciones y ubicarlas en la matriz
+            for (int i = 0; i < 10; i++)
+            {
+                for (int j = 0; j < 10; j++)
+                {
+                    matriz[i, j] = new NodoRedVial(new Informacion
+                    {
+                        Nombre = $"Intersección ({i},{j})",
+                        VehiculoEnEspera = 0,
+                        TiempoPromedioTransito = 1.5
+                    });
+                }
+            }
 
-		protected void OnCellClick(NodoRedVial nodo)
-		{
-			// Lógica al hacer clic (ej: seleccionar nodo)
-			Console.WriteLine($"Nodo ({nodo.X}, {nodo.Y}): {nodo.VehiculosEnEspera} vehículos");
-		}
+            // Conectar las intersecciones entre sí
+            for (int i = 0; i < 10; i++)
+            {
+                for (int j = 0; j < 10; j++)
+                {
+                    if (i > 0) matriz[i, j].Norte = matriz[i - 1, j]; // Conectar al norte
+                    if (i < 9) matriz[i, j].Sur = matriz[i + 1, j]; // Conectar al sur
+                    if (j > 0) matriz[i, j].Oeste = matriz[i, j - 1]; // Conectar al oeste
+                    if (j < 9) matriz[i, j].Este = matriz[i, j + 1]; // Conectar al este
+                }
+            }
+        }
 
-		protected void GenerateNewMap()
-		{
-			Mapa = new MapaVial();
-			StateHasChanged();
-		}
-	}
+        // Método para visualizar la red vial (Ejemplo de recorrido)
+        public void MostrarRedVial()
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                for (int j = 0; j < 10; j++)
+                {
+                    Console.Write($"[{matriz[i, j].informacion.Nombre}] ");
+                }
+                Console.WriteLine();
+            }
+        }
+    }
 }
+

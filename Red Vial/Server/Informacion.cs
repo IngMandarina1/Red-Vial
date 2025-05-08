@@ -1,7 +1,10 @@
 ﻿namespace Red_Vial.Server
 {
-	public abstract class Informacion
+	public class Informacion
 	{
-
+		public string Nombre { get; set; }
+		public int VehiculoEnEspera { get; set; }
+		
+		public double TiempoPromedioTransito { get; set; }
 	}
 }
