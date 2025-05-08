@@ -1,0 +1,29 @@
+﻿.nodo {
+    width: 100px;
+    height: 100px;
+    border: 2px solid black;
+    position: relative;
+    overflow: hidden; /* Oculta los vehículos hasta que se muevan */
+    background-color: #ccc;
+}
+
+.vehiculo {
+    width: 20px;
+    height: 10px;
+    background-color: red;
+    position: absolute;
+    border-radius: 5px;
+    animation: movimiento 3s infinite linear;
+}
+
+@keyframes movimiento {
+    0% {
+        left: -20px;
+        top: 10px;
+    }
+
+    100% {
+        left: 100px;
+        top: 10px;
+    }
+}

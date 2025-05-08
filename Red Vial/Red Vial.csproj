@@ -8,13 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Pages\Home .CSS" />
+    <None Remove="Pages\Home.css" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Pages\Home .CSS">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-    </Content>
+    <Content Include="Pages\Home.css" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,23 +1,3 @@
 ﻿@page "/"
 @inject Red_Vial.Server.LED RedVialService
-
-<h1>Simulación de Red Vial 10x10</h1>
-
-<table class="table">
-    <tbody>
-        @for (int i = 0; i < 10; i++)
-        {
-            <tr>
-                @for (int j = 0; j < 10; j++)
-                {
-                    var interseccion = RedVialService.matriz[i, j];
-                    <td style="border: 1px solid black; padding: 5px;">
-                        @interseccion.informacion.Nombre
-                        <br />Semáforo: @interseccion.informacion.TiempoPromedioTransito min
-                        <br /> Vehículos: @interseccion.informacion.VehiculoEnEspera
-                    </td>
-                }
-            </tr>
-        }
-    </tbody>
-</table>
+@using Red_Vial.Server
