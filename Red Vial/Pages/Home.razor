@@ -1,3 +1,138 @@
-﻿@page "/"
-@inject Red_Vial.Server.LED RedVialService
-@using Red_Vial.Server
+﻿@page "/" 
+@inject Red_Vial.Server.LED RedVialService 
+@using Red_Vial.Server; 
+
+<style>
+    .red-vial-container {
+        background: #2c3e50;
+        padding: 2rem;
+        border-radius: 15px;
+        box-shadow: 0 0 30px rgba(0,0,0,0.3);
+    }
+
+    .grid-container {
+        display: grid;
+        grid-template-columns: repeat(10, 1fr);
+        gap: 2px;
+        position: relative;
+        margin: 20px auto;
+        max-width: 800px;
+    }
+
+    .nodo {
+        background: #34495e;
+        aspect-ratio: 1;
+        position: relative;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border-radius: 3px;
+    }
+
+        .nodo:hover {
+            transform: scale(1.1);
+            z-index: 2;
+            box-shadow: 0 0 15px #f1c40f;
+        }
+
+    .conexion {
+        position: absolute;
+        background: repeating-linear-gradient( 90deg, #f1c40f 0px, #f1c40f 10px, transparent 10px, transparent 20px );
+        z-index: 1;
+    }
+
+    .horizontal {
+        width: 100%;
+        height: 3px;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    .vertical {
+        height: 100%;
+        width: 3px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .info-badge {
+        position: absolute;
+        bottom: 5px;
+        right: 5px;
+        background: #e74c3c;
+        color: white;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .detalles-nodo {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: #34495e;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        z-index: 100;
+        color: white;
+    }
+</style>
+
+<div class="red-vial-container">
+    <h1 style="color: #ecf0f1; text-align: center; margin-bottom: 30px;">Red Vial Inteligente</h1>
+
+    <div class="grid-container">
+        @for (int i = 0; i < 10; i++)
+        {
+            @for (int j = 0; j < 10; j++)
+            {
+                var nodo = RedVialService.matriz[i, j];
+                <div class="nodo" @onclick="() => MostrarDetalles(nodo)">
+                    <!-- Conexiones -->
+                    @if (nodo.Norte != null)
+                    {
+                        <div class="conexion vertical"></div>
+                    }
+                    @if (nodo.Oeste != null)
+                    {
+                        <div class="conexion horizontal"></div>
+                    }
+
+                    <!-- Indicador de tráfico -->
+                    <div class="info-badge">
+                        @nodo.informacion.VehiculoEnEspera
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
+
+@if (nodoSeleccionado != null)
+{
+    <div class="detalles-nodo">
+        <h3>@nodoSeleccionado.informacion.Nombre</h3>
+        <p>Vehículos en espera: @nodoSeleccionado.informacion.VehiculoEnEspera</p>
+        <p>Tiempo promedio: @nodoSeleccionado.informacion.TiempoPromedioTransito.ToString("0.00")s</p>
+        <button @onclick="CerrarDetalles">Cerrar</button>
+    </div>
+}
+
+@code {
+    private NodoRedVial nodoSeleccionado;
+
+    private void MostrarDetalles(NodoRedVial nodo)
+    {
+        nodoSeleccionado = nodo;
+    }
+
+    private void CerrarDetalles()
+    {
+        nodoSeleccionado = null;
+    }
+}

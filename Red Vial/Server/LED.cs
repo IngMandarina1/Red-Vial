@@ -4,81 +4,39 @@ namespace Red_Vial.Server
 {
     public class LED
     {
-        public NodoRedVial? NodoPrincipal { get; private set; }
+        public NodoRedVial?[,] matriz = new NodoRedVial[10, 10];
 
         public LED()
         {
-            InicializarRedVialDinamica(10, 10);
+            InicializarRedVial();
         }
 
-        private void InicializarRedVialDinamica(int filas, int columnas)
+        private void InicializarRedVial()
         {
-            NodoRedVial? filaAnteriorInicio = null;
-
-            for (int i = 0; i < filas; i++)
+            // Crear intersecciones y ubicarlas en la matriz
+            for (int i = 0; i < 10; i++)
             {
-                NodoRedVial? nodoAnterior = null;
-                NodoRedVial? nodoActual = null;
-                NodoRedVial? nodoFilaInicio = null;
-
-                for (int j = 0; j < columnas; j++)
+                for (int j = 0; j < 10; j++)
                 {
-                    nodoActual = new NodoRedVial(new Informacion
+                    matriz[i, j] = new NodoRedVial(new Informacion
                     {
                         Nombre = $"Intersección ({i},{j})",
                         VehiculoEnEspera = 0,
                         TiempoPromedioTransito = 1.5
                     });
-
-                    if (NodoPrincipal == null)
-                        NodoPrincipal = nodoActual;
-
-                    if (nodoAnterior != null)
-                    {
-                        nodoAnterior.Este = nodoActual;
-                        nodoActual.Oeste = nodoAnterior;
-                    }
-
-                    if (filaAnteriorInicio != null)
-                    {
-                        // Buscar el nodo correspondiente en la fila anterior
-                        NodoRedVial? nodoSuperior = filaAnteriorInicio;
-                        for (int k = 0; k < j; k++)
-                        {
-                            nodoSuperior = nodoSuperior?.Este;
-                        }
-
-                        if (nodoSuperior != null)
-                        {
-                            nodoSuperior.Sur = nodoActual;
-                            nodoActual.Norte = nodoSuperior;
-                        }
-                    }
-
-                    if (j == 0)
-                        nodoFilaInicio = nodoActual;
-
-                    nodoAnterior = nodoActual;
                 }
-
-                filaAnteriorInicio = nodoFilaInicio;
             }
-        }
 
-        public void MostrarRedVial()
-        {
-            NodoRedVial? fila = NodoPrincipal;
-
-            while (fila != null)
+            // Conectar las intersecciones entre sí
+            for (int i = 0; i < 10; i++)
             {
-                NodoRedVial? actual = fila;
-                while (actual != null)
+                for (int j = 0; j < 10; j++)
                 {
-                    Console.Write($"[{actual.informacion.Nombre}] ");
-                    actual = actual.Este;
+                    if (i > 0) matriz[i, j].Norte = matriz[i - 1, j]; // Conectar al norte
+                    if (i < 9) matriz[i, j].Sur = matriz[i + 1, j]; // Conectar al sur
+                    if (j > 0) matriz[i, j].Oeste = matriz[i, j - 1]; // Conectar al oeste
+                    if (j < 9) matriz[i, j].Este = matriz[i, j + 1]; // Conectar al este
                 }
-                Console.WriteLine();
-                fila = fila.Sur;
             }
         }
     }
